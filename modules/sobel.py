@@ -17,5 +17,4 @@ def sobelOperator(img):
             container2[i][j] = min(255, np.abs(gx) + np.abs(128))
             container3[i][j] = min(255, np.abs(128) + np.abs(gy))
 
-
     return [container, container2, container3]
