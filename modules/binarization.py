@@ -1,8 +1,5 @@
-from __future__ import division
 import numpy as np
 from numpy.lib.stride_tricks import as_strided
-
-__all__ = ['view_as_windows']
 
 
 def view_as_windows(arr_in, window_shape, step=1):

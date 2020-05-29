@@ -3,7 +3,7 @@ import modules.semitone as semitone
 import modules.binarization as binarization
 import utils as utils
 
-IMAGES_RESOURCE = "images/resource/"
+IMAGES_RESOURCE = "images/resource/1_task/"
 IMAGES_RESULT = "images/result/1_task/"
 
 
