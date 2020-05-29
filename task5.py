@@ -37,8 +37,8 @@ s.horizontal_profile(prof_x, RESULTS_PATH + "1/line_profiles/horizontal.png")
 s.vertical_profile(prof_y, RESULTS_PATH + "1/line_profiles/vertical.png", (25, 5))
 
 # 3. Реализовать алгоритм сегментации символов в строке на основе профилей с прореживанием
-#rects_img_1 = s.get_rects(img_1)
-#s.draw_bounds(SAMPLES_PATH + "text3.png", RESULTS_PATH + "/1/bounds.png", rects_img_1)
+#rects_img_1 = s.get_polygon(img_1)
+#s.draw_polygons(SAMPLES_PATH + "text3.png", RESULTS_PATH + "/1/bounds.png", rects_img_1)
 
 #for i in range(0, len(poly_img_1)):
    # norm = s.polygon_to_matrix(poly_img_1[i], img_1) * 255
@@ -46,13 +46,13 @@ s.vertical_profile(prof_y, RESULTS_PATH + "1/line_profiles/vertical.png", (25, 5
     #print(norm)
 
 
-poly_img_1 = s.get_rects(img_1)
-s.draw_bounds(SAMPLES_PATH + "text3.png", RESULTS_PATH + "/1/bounds.png", poly_img_1)
+poly_img_1 = s.get_polygon(img_1)
+s.draw_polygons(SAMPLES_PATH + "text3.png", RESULTS_PATH + "/1/bounds.png", poly_img_1)
 
 # (пробуем ещё с изображением с многими строками)
 #img_2 = fa.get_normalized_image(utils.pix_from_path(SAMPLES_PATH + "2.png"))
-#rects_img_2 = fa.get_rects(img_2)
-#fa.draw_bounds(SAMPLES_PATH + "2.png", RESULTS_PATH + "/2/bounds.png", rects_img_2)
+#rects_img_2 = fa.get_polygon(img_2)
+#fa.draw_polygons(SAMPLES_PATH + "2.png", RESULTS_PATH + "/2/bounds.png", rects_img_2)
 
 # 4. Построить профили символов выбранного алфавита
 #save_char_profiles(img_1, rects_img_1, "/1")

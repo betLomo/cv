@@ -1,24 +1,25 @@
 import numpy as np
 import matplotlib.pyplot as plt
+
 from PIL import Image
 from PIL import ImageDraw
-from PIL import ImageFont
+
 import math
 
 
-def calc_weight(pix_arr):
-    weight = 0
+def weight(pix_arr):
+    w = 0
     size = pix_arr.shape
     for i in range(0, size[0]):
         for j in range(0, size[1]):
-            weight += pix_arr[i][j]
+            w += pix_arr[i][j]
 
-    return weight
+    return w
 
 
-def calc_specific_weight(pix_arr):
+def specific_weight(pix_arr):
     size = pix_arr.shape
-    return calc_weight(pix_arr) / (size[0] * size[1])
+    return weight(pix_arr) / (size[0] * size[1])
 
 
 def calc_moment(pix_arr, p, q):
@@ -32,16 +33,16 @@ def calc_moment(pix_arr, p, q):
     return moment
 
 
-def calc_zero_moment(pix_arr):
+def zero_moment(pix_arr):
     return calc_moment(pix_arr, 0, 0)
 
 
 def center_of_gravity_x(pix_arr):
-    return calc_moment(pix_arr, 1, 0) / calc_zero_moment(pix_arr)
+    return calc_moment(pix_arr, 1, 0) / zero_moment(pix_arr)
 
 
 def center_of_gravity_y(pix_arr):
-    return calc_moment(pix_arr, 0, 1) / calc_zero_moment(pix_arr)
+    return calc_moment(pix_arr, 0, 1) / zero_moment(pix_arr)
 
 
 def norm_center_of_gravity_x(pix_arr):
@@ -52,7 +53,7 @@ def norm_center_of_gravity_y(pix_arr):
     return (center_of_gravity_y(pix_arr) - 1) / (pix_arr.shape[1] - 1)
 
 
-def calc_axial_moment_horizontal(pix_arr):
+def axial_moment_horizontal(pix_arr):
     axial_moment_x = 0
     center_y = center_of_gravity_y(pix_arr)
 
@@ -64,7 +65,7 @@ def calc_axial_moment_horizontal(pix_arr):
     return axial_moment_x
 
 
-def calc_axial_moment_vertical(pix_arr):
+def axial_moment_vertical(pix_arr):
     axial_moment_y = 0
     center_x = center_of_gravity_x(pix_arr)
 
@@ -76,12 +77,12 @@ def calc_axial_moment_vertical(pix_arr):
     return axial_moment_y
 
 
-def calc_norm_axial_moment_horizontal(pix_arr):
-    return calc_axial_moment_horizontal(pix_arr) / (calc_weight(pix_arr)**2)
+def norm_axial_moment_horizontal(pix_arr):
+    return axial_moment_horizontal(pix_arr) / (weight(pix_arr)**2)
 
 
-def calc_norm_axial_moment_vertical(pix_arr):
-    return calc_axial_moment_vertical(pix_arr) / (calc_weight(pix_arr)**2)
+def norm_axial_moment_vertical(pix_arr):
+    return axial_moment_vertical(pix_arr) / (weight(pix_arr)**2)
 
 
 def calc_image_profile(pix, p=0, q=0):
@@ -113,7 +114,6 @@ def calc_image_profile_angle(pix):
 
     profile = []
 
-    #print('real_width=' + str(pix_width) + ", bound=" + str(pix_width - math.ceil(pix_height * ctg)))
     for y in range(math.ceil(pix_height * ctg), pix_width):
         current_sum = 0
         for x in range(0, pix_height):
@@ -121,6 +121,7 @@ def calc_image_profile_angle(pix):
         profile.append(current_sum)
 
     return profile
+
 
 def horizontal_profile(profile, path, figsize=(5.0, 5.0)):
     pts = np.arange(len(profile))
@@ -140,6 +141,7 @@ def vertical_profile(profile, path, figsize=(5.0, 5.0)):
     plt.close()
 
 
+# Блок про распознавание
 def detect_symbols_in_profile(p):
     bounds = []
 
@@ -150,7 +152,6 @@ def detect_symbols_in_profile(p):
         elif (p[i - 1] != 0 and p[i] == 0) or (i == len(p) - 1 and bound_start is not None):
             bounds.append((bound_start, i))
             bound_start = None
-
 
     return bounds
 
@@ -186,23 +187,7 @@ def detect_strings(p, n):
     return bounds
 
 
-# def detect_symbols_in_profile_angle(p):
- #   bounds = []
-
-  #  bound_start = None
-   # for i in range(0, len(p)):
-    #    if (p[i - 1] == 0 and p[i] != 0) or i == 0:
-     #       bound_start = i
-      #  elif (p[i - 1] != 0 and p[i] == 0) or (i == len(p) - 1 and bound_start is not None):
-       #     bounds.append((bound_start, i))
-        #    bound_start = None
-
-    #return bounds
-
-
-
-
-def draw_bounds(source_path, result_path, rects):
+def draw_polygons(source_path, result_path, rects):
     """
     :param source_path:
     :param result_path:
@@ -218,6 +203,7 @@ def draw_bounds(source_path, result_path, rects):
 
     img.save(result_path)
 
+
 def draw_lines(source_path, result_path, lines):
     img = Image.open(source_path)
     img.load()
@@ -228,49 +214,24 @@ def draw_lines(source_path, result_path, lines):
     img.save(result_path)
 
 
-#def get_rects(pix):
- #   result = []
-
-  #  prof_x = calc_image_profile(pix, 1, 0)
-   # horizontal_bounds = detect_symbols_in_profile(prof_x)
-    #for i in range(0, len(horizontal_bounds)):
-    #for i in range(0, 1):
-     #   (y0, y1) = horizontal_bounds[i]
-      #  line_pix = pix[y0:y1]
-       # prof_y = calc_image_profile(line_pix)
-        #vertical_bounds = detect_symbols_in_profile(prof_y)
-        #for j in range(0, len(vertical_bounds)):
-         #   (x0, x1) = vertical_bounds[j]
-          #  char_pix = line_pix[:, x0:x1]
-           # char_prof_x = calc_image_profile(char_pix, 1, 0)
-            #char_bounds = detect_symbols_in_profile(char_prof_x)
-            #(fy0, fy1) = (char_bounds[0][0], char_bounds[-1][1])
-            #result.append([x0, y0 + fy0, x1, y0 + fy1])
-
-    #return result
-
-
-def get_rects(pix):
+def get_polygon(pix):
     result = []
-    ctg = (27 / 130)
     prof_x = calc_image_profile(pix, 1, 0)
     horizontal_bounds = detect_strings(prof_x, 2)
     for i in range(0, len(horizontal_bounds)):
         (y0, y1) = horizontal_bounds[i]
         line_pix = pix[y0:y1]
         prof_y = calc_image_profile_angle(line_pix)
-        #print(prof_y)
         vertical_bounds = detect_symbols_in_profile(prof_y)
-        #print(vertical_bounds)
         for j in range(0, len(vertical_bounds)):
             (x0, x1) = vertical_bounds[j]
             char_pix = line_pix[:, x0:x1]
             result.append(get_symbol_polygon(char_pix, x0, x1, y0, y1))
 
-    #print(result)
     return result
 
 
+# Конвертация параллелограмма в обычную матрицу
 def polygon_to_matrix(arr, pix):
     a, b, c,  d = arr
     (ax, ay) = a
@@ -292,6 +253,7 @@ def polygon_to_matrix(arr, pix):
 
 
 def get_symbol_polygon(char_pix, x0=None, x1=None, y0=None, y1=None):
+    # Котангенс наклона курсива (был высчитан вручную для arial_italic.ttf)
     ctg = (27 / 130)
 
     if x0 is None:
@@ -317,17 +279,16 @@ def get_symbol_polygon(char_pix, x0=None, x1=None, y0=None, y1=None):
 
 
 def get_pix_hypothesis(pix, model_dict):
-    pix_polygons = get_rects(pix)
+    pix_polygons = get_polygon(pix)
     res = []
 
     for poly in pix_polygons:
         symbol = polygon_to_matrix(poly, pix)
-        weight_black_norm = calc_specific_weight(symbol)
+        weight_black_norm = specific_weight(symbol)
         x_coords_norm = norm_center_of_gravity_x(symbol)
         y_coords_norm = norm_center_of_gravity_y(symbol)
-        x_axis_moment_norm = calc_norm_axial_moment_horizontal(symbol)
-        y_axis_moment_norm = calc_norm_axial_moment_vertical(symbol)
-
+        x_axis_moment_norm = norm_axial_moment_horizontal(symbol)
+        y_axis_moment_norm = norm_axial_moment_vertical(symbol)
 
         diff_dict = {}
         for sym in model_dict:
@@ -347,5 +308,3 @@ def get_pix_hypothesis(pix, model_dict):
         res.append(diff_dict)
 
     return res
-
-

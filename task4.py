@@ -127,30 +127,43 @@ symbols_normalized = pix_config_to_binary(symbols_threshold)
 # инвертируем чёрное и белое
 symbols_final = pix_config_invert(symbols_normalized)
 
+# обрезаем все символы
 symbols_crop = pix_crop(symbols_final)
 
-symbols_weight = pix_apply(symbols_crop, signs.calc_weight)
+# Вес
+symbols_weight = pix_apply(symbols_crop, signs.weight)
 
-symbols_specific_weight = pix_apply(symbols_crop, signs.calc_specific_weight)
+# Удельный вес
+symbols_specific_weight = pix_apply(symbols_crop, signs.specific_weight)
 
-symbols_zero_moment = pix_apply(symbols_crop, signs.calc_zero_moment)
+# Нулевой момент
+symbols_zero_moment = pix_apply(symbols_crop, signs.zero_moment)
 
+# Координата х центра тяжести
 symbols_center_of_gravity_x = pix_apply(symbols_crop, signs.center_of_gravity_x)
 
+# Координата y центра тяжести
 symbols_center_of_gravity_y = pix_apply(symbols_crop, signs.center_of_gravity_y)
 
+# Нормированная координата х центра тяжести
 symbols_norm_center_of_gravity_x = pix_apply(symbols_crop, signs.norm_center_of_gravity_x)
 
+# Нормированная координата y центра тяжести
 symbols_norm_center_of_gravity_y = pix_apply(symbols_crop, signs.norm_center_of_gravity_y)
 
-symbols_horizontal = pix_apply(symbols_crop, signs.calc_axial_moment_horizontal)
+# Осевой момент инерции по-горизонтали
+symbols_horizontal = pix_apply(symbols_crop, signs.axial_moment_horizontal)
 
-symbols_vertical = pix_apply(symbols_crop, signs.calc_axial_moment_vertical)
+# Осевой момент инерциии по-вертикали
+symbols_vertical = pix_apply(symbols_crop, signs.axial_moment_vertical)
 
-symbols_norm_horizontal = pix_apply(symbols_crop, signs.calc_norm_axial_moment_horizontal)
+# Нормированный осевой момент инерции по-горизонтали
+symbols_norm_horizontal = pix_apply(symbols_crop, signs.norm_axial_moment_horizontal)
 
-symbols_norm_vertical = pix_apply(symbols_crop, signs.calc_norm_axial_moment_vertical)
+# Нормированный осевой момент инерции по-вертикали
+symbols_norm_vertical = pix_apply(symbols_crop, signs.norm_axial_moment_vertical)
 
+# Сохранение в .cvs файл
 cvs_custom.save_model('./dictionary/sign_table.csv', [
         'Символ',
         'Вес',
@@ -172,5 +185,6 @@ cvs_custom.save_model('./dictionary/sign_table.csv', [
         symbols_norm_horizontal, symbols_norm_vertical,
     ])
 
-#pix_apply_plot_horizontal(symbols_final)
-#pix_apply_plot_vertical(symbols_final)
+# Профили
+pix_apply_plot_horizontal(symbols_final)
+pix_apply_plot_vertical(symbols_final)
