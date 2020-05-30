@@ -18,15 +18,15 @@ def save_to_txt(dis_i, dis_j, path):
 def texture(sample_path, result_path):
     pix = u.picture_to_array(IMAGES_RESOURCE + sample_path)
     pix_semitone = semitone.semitone(pix)
-    # градации яркостей
-    gradation_matrix = t.semitone_gradation(pix_semitone, 255)
-    co_occurrence_matrix = t.get_co_occurrence_matrix(gradation_matrix, 255)
-    # Дисперсия
-    dis_i = t.dispersion(co_occurrence_matrix, 0)
-    dis_j = t.dispersion(co_occurrence_matrix, 1)
+    u.array_to_picture(pix_semitone, IMAGES_RESULT + result_path + "semitone.png")
+
+    co_occurrence_matrix = t.get_co_occurrence_matrix(pix_semitone)
+    spread_image = t.norm_matrix(co_occurrence_matrix)
+
+    dis_i = t.dispersion(spread_image, 0)
+    dis_j = t.dispersion(spread_image, 1)
     save_to_txt(dis_i, dis_j, IMAGES_RESULT + result_path + "features.txt")
 
-    spread_image = t.spread_image(co_occurrence_matrix)
     u.array_to_picture(spread_image, IMAGES_RESULT + result_path + "visualized.png")
 
 

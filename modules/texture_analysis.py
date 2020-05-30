@@ -2,12 +2,12 @@ import numpy as np
 import math
 
 
-def get_co_occurrence_matrix(pix, l):
+def get_co_occurrence_matrix(pix):
     d = 3
     angles = [0.25 * math.pi, 0.75 * math.pi, 1.25 * math.pi, 1.75 * math.pi]
 
     height, width = pix.shape
-    p = np.zeros([l, l]).astype(np.uint)
+    p = np.zeros([256, 256]).astype(np.uint)
 
     for x in range(0, width):
         for y in range(0, height):
@@ -23,23 +23,11 @@ def get_co_occurrence_matrix(pix, l):
     return p
 
 
-def semitone_gradation(pix, l):
-    step = 256 / l
-    height, width = pix.shape
-    result = np.empty([height, width]).astype(np.uint8)
-
-    for x in range(0, height):
-        for y in range(0, width):
-            result[x, y] = math.floor(pix[x][y] / step)
-
-    return result
-
-
-def spread_image(pix):
+def norm_matrix(pix):
     height, width = pix.shape
 
     result = np.empty([height, width]).astype(np.uint8)
-    max_value, min_value = np.max(pix), np.min(pix[np.nonzero(pix)])
+    max_value = np.max(pix)
 
     for x in range(0, height):
         for y in range(0, width):
@@ -52,7 +40,6 @@ def av(matrix, axis=0):
     result = 0
     size = matrix.shape[0]
     for i in range(0, size):
-        # считаем PJ(i) или PI(j)
         p = 0
         for j in range(0, size):
             p += matrix[i][j] if axis == 0 else matrix[j][i]
@@ -68,7 +55,6 @@ def dispersion(matrix, axis=0):
 
     if axis == 0:
         for i in range(0, size):
-            # считаем PJ(i) или PI(j)
             p = 0
             for j in range(0, size):
                 p += matrix[i][j]
