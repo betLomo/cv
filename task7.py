@@ -1,7 +1,6 @@
 import modules.texture_analysis as t
 import utils as u
 import modules.semitone as semitone
-import modules.signs as s
 
 IMAGES_RESOURCE = "images/resource/7_task/"
 IMAGES_RESULT = "images/result/7_task/"
@@ -26,11 +25,6 @@ def texture(sample_path, result_path):
     dis_i = t.dispersion(co_occurrence_matrix, 0)
     dis_j = t.dispersion(co_occurrence_matrix, 1)
     save_to_txt(dis_i, dis_j, IMAGES_RESULT + result_path + "features.txt")
-
-    # Гистаграмма
-    sums = t.sums(co_occurrence_matrix)
-    s.vertical_profile(sums, IMAGES_RESULT + result_path + "histogram.png", (20.0, 5.0))
-
 
     spread_image = t.spread_image(co_occurrence_matrix)
     u.array_to_picture(spread_image, IMAGES_RESULT + result_path + "visualized.png")

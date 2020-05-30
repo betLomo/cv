@@ -61,18 +61,6 @@ def av(matrix, axis=0):
     return result / (size**2)
 
 
-def sums(matrix):
-    result = []
-    size = matrix.shape[0]
-    for i in range(0, size):
-        p = 0
-        for j in range(0, size):
-            p += matrix[i][j]
-        result.append(p)
-
-    return result
-
-
 def dispersion(matrix, axis=0):
     dis = 0
     m = av(matrix, axis)
